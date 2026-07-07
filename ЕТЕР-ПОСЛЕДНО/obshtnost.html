@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Споделяне и общност | Пространство Етер</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af88; --deep: #2a2a3a; --soft: #f8f1e9; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--deep); line-height: 1.7; background: var(--soft); }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .nav { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid #eee; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold); font-weight: 700; text-decoration: none; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .back-link { text-decoration: none; color: var(--deep); font-weight: 500; font-size: 0.95rem; }
+        .back-link:hover { color: var(--gold); }
+        .lang-toggle { display: flex; gap: 2px; background: #f0ebe3; border-radius: 20px; padding: 3px; }
+        .lang-btn { background: none; border: none; cursor: pointer; padding: 5px 11px; border-radius: 16px; font-size: 0.8rem; font-weight: 700; color: #aaa; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .lang-btn.active { background: var(--deep); color: white; }
+        /* Hero */
+        .hero-service { height: 100vh; min-height: 500px; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+        .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(26,26,40,0.1) 0%, rgba(26,26,40,0.65) 100%); }
+        .hero-text { position: relative; z-index: 2; color: white; padding: 2rem; max-width: 700px; }
+        .hero-text h1 { font-size: clamp(2.4rem,8vw,4rem); color: white; margin-bottom: 0.7rem; text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        .hero-tagline { font-size: clamp(1rem,3vw,1.3rem); opacity: 0.82; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 0; }
+        .scroll-hint { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.45; margin-top: 2.5rem; animation: ud 2.4s ease-in-out infinite; }
+        @keyframes ud { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(6px);opacity:.7} }
+        /* Quote */
+        .quote-section { background: var(--deep); padding: clamp(50px,8vw,80px) 5%; text-align: center; }
+        .quote-mark { font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--gold); line-height: 0.4; display: block; margin-bottom: 1.2rem; opacity: 0.55; }
+        .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.15rem,3.5vw,1.6rem); color: white; font-style: italic; max-width: 680px; margin: 0 auto 1rem; line-height: 1.65; }
+        .quote-author { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; }
+        /* Content */
+        .content-section { padding: clamp(60px,10vw,100px) 5%; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+        .two-col h2 { font-size: clamp(1.7rem,4.5vw,2.4rem); margin-bottom: 1.2rem; line-height: 1.3; }
+        .two-col p { font-size: 1rem; color: #444; margin-bottom: 0.9rem; }
+        .two-col p strong { color: var(--deep); }
+        /* Benefits */
+        .benefits-section { background: white; padding: clamp(60px,10vw,100px) 5%; }
+        .benefits-title { text-align: center; font-size: clamp(1.8rem,5vw,2.4rem); margin-bottom: 3rem; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .benefit-card { background: var(--soft); border-radius: 16px; padding: 28px 22px; text-align: center; }
+        .benefit-icon { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+        .benefit-card h3 { font-size: 1rem; margin-bottom: 8px; color: var(--deep); font-family: 'Playfair Display', serif; }
+        .benefit-card p { font-size: 0.88rem; color: #666; line-height: 1.55; }
+        /* Schedule */
+        .week-section { background: var(--soft); padding: clamp(50px,8vw,70px) 5%; }
+        .week-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem,4.5vw,2.2rem); margin-bottom: 0.5rem; text-align: center; }
+        .week-label { text-align: center; color: #aaa; font-size: 0.88rem; margin-bottom: 2rem; }
+        .week-table-wrap { background: white; border-radius: 16px; overflow-x: auto; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+        .week-table-wrap table { width: 100%; border-collapse: collapse; min-width: 300px; }
+        .week-table-wrap th { background: var(--deep); color: white; padding: 14px 18px; text-align: left; font-weight: 500; }
+        .week-table-wrap td { padding: 13px 18px; border-bottom: 1px solid #f0ebe3; font-size: 0.95rem; }
+        .week-table-wrap tr:last-child td { border-bottom: none; }
+        .week-note { text-align: center; margin-top: 1.2rem; font-size: 0.83rem; color: #aaa; font-style: italic; }
+        /* CTA */
+        .cta-section { background: var(--deep); padding: clamp(60px,10vw,100px) 5%; text-align: center; }
+        .cta-section h2 { color: white; font-size: clamp(1.8rem,5vw,2.4rem); margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.72); margin-bottom: 2.5rem; font-size: 1.05rem; }
+        .btn { display: inline-block; padding: 15px 36px; background: var(--gold); color: #222; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; margin: 6px; font-size: 1rem; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(212,175,136,0.4); }
+        .btn-ghost { background: transparent; border: 2px solid rgba(255,255,255,0.45); color: white; }
+        .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+        .footer-strip { background: #141420; color: rgba(255,255,255,0.38); text-align: center; padding: 24px; font-size: 0.83rem; }
+        .footer-strip a { color: var(--gold); text-decoration: none; }
+        /* Responsive */
+        @media (max-width: 680px) { .two-col { grid-template-columns: 1fr; gap: 36px; } .benefits-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 380px) { .benefits-grid { grid-template-columns: 1fr; } }
+        .hero-service { background: #111520; }
+        #comm-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .detail-en { display: none; }
+        </style>
+</head>
+<body>
+<nav class="nav">
+    <a href="../index.html" class="logo">Етер</a>
+    <div class="nav-right">
+        <a href="../index.html" class="back-link">← <span data-t-bg="Начало" data-t-en="Home">Начало</span></a>
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="bg" onclick="switchLang('bg')">BG</button>
+            <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
+        </div>
+    </div>
+</nav>
+
+<section class="hero-service">
+    <canvas id="comm-canvas" class="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+        <h1 data-t-bg="Споделяне и общност" data-t-en="Sharing & Community" data-field="title">Споделяне и общност</h1>
+        <p class="hero-tagline" data-t-bg="Кръгове за споделяне и срещи за осъзнатост" data-t-en="Sharing circles and mindfulness gatherings" data-field="tag">Кръгове за споделяне и срещи за осъзнатост</p>
+        <p class="scroll-hint">↓ &nbsp; <span data-t-bg="Открий повече" data-t-en="Discover more" data-field="discover">Открий повече</span></p>
+    </div>
+</section>
+
+<div class="quote-section">
+    <span class="quote-mark">"</span>
+    <p class="quote-text" data-t-bg="Ние растем един с друг. Общността е огледало, в което се виждаме по-ясно." data-t-en="We grow through one another. Community is the mirror in which we see ourselves more clearly." data-field="quote">Ние растем един с друг. Общността е огледало, в което се виждаме по-ясно.</p>
+    <p class="quote-author" data-t-bg="— Пространство Етер" data-t-en="— Ether Space" data-field="q_author">— Пространство Етер</p>
+</div>
+
+<section class="content-section">
+    <div class="container">
+        <div class="two-col">
+            <div>
+                <h2 data-t-bg="Кръгове за споделяне" data-t-en="Sharing circles" data-field="what_h">Кръгове за споделяне</h2>
+                <p>Кръговете за споделяне са пространство, в което хората се срещат като равни. Без йерархия, без оценки — само присъствие, слушане и автентично споделяне. Всеки носи своята история, всеки е добре дошъл.</p>
+                <p>Организираме редовни срещи за осъзнатост, тематични кръгове и специални събирания. Форматите варират, но намерението е едно — истинска среща между хора.</p>
+            </div>
+            <div>
+                <h2 data-t-bg="Практически детайли" data-t-en="Practical details">Практически детайли</h2>
+                <div class="detail-bg"><p>Групови срещи • Различни формати • Следете Instagram за дати</p><br></div><div class="detail-en" style="display:none;"><p>Group sessions • Various formats • Follow Instagram for dates</p><br></div>
+                <p><strong data-t-bg="Адрес" data-t-en="Address">Адрес</strong>: ул. „Свети Климент Охридски" 3, Разлог</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <h2 class="benefits-title" data-t-bg="Ползи от практиката" data-t-en="Benefits" data-field="ben_title">Ползи от практиката</h2>
+    <div class="benefits-grid">
+        
+            <div class="benefit-card">
+                <span class="benefit-icon">🔥</span>
+                <h3 data-t-bg="Автентично споделяне" data-t-en="Authentic sharing">Автентично споделяне</h3>
+                <p data-t-bg="В кръга всеки може да говори от сърцето, без страх от осъждане." data-t-en="In the circle, everyone can speak from the heart without fear of judgement.">В кръга всеки може да говори от сърцето, без страх от осъждане.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">🌐</span>
+                <h3 data-t-bg="Истинска връзка" data-t-en="Real connection">Истинска връзка</h3>
+                <p data-t-bg="Срещите създават дълбоки човешки връзки, които надхвърлят повърхностното." data-t-en="Gatherings create deep human bonds that go beyond the surface.">Срещите създават дълбоки човешки връзки, които надхвърлят повърхностното.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">💬</span>
+                <h3 data-t-bg="Взаимно огледало" data-t-en="Mutual mirroring">Взаимно огледало</h3>
+                <p data-t-bg="Слушането на другите ни помага да видим себе си по-ясно." data-t-en="Listening to others helps us see ourselves more clearly.">Слушането на другите ни помага да видим себе си по-ясно.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">🌱</span>
+                <h3 data-t-bg="Чувство за принадлежност" data-t-en="Sense of belonging">Чувство за принадлежност</h3>
+                <p data-t-bg="Общността ни напомня, че не сме сами в нашите преживявания." data-t-en="Community reminds us we are not alone in our experiences.">Общността ни напомня, че не сме сами в нашите преживявания.</p>
+            </div>
+    </div>
+</section>
+
+<section class="week-section">
+    <div class="container">
+        <h2 data-t-bg="Часове тази седмица" data-t-en="Classes this week" data-field="week_h">Часове тази седмица</h2>
+        <p class="week-label" id="week-lbl"></p>
+        <div class="week-table-wrap">
+            <table>
+                <thead><tr>
+                    <th data-t-bg="Ден" data-t-en="Day" data-field="th_day">Ден</th>
+                    <th data-t-bg="Час" data-t-en="Time" data-field="th_time">Час</th>
+                    <th data-t-bg="Водещ" data-t-en="Teacher" data-field="th_teacher">Водещ</th>
+                </tr></thead>
+                <tbody id="svc-tbody">
+                    <tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">Зареждане...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="week-note" data-t-bg="* Следете Instagram за актуална програма." data-t-en="* Follow Instagram for the latest schedule." data-field="ig_note">* Следете Instagram за актуална програма.</p>
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2 data-t-bg="Искаш ли да се присъединиш?" data-t-en="Would you like to join?" data-field="cta_h">Искаш ли да се присъединиш?</h2>
+    <p data-t-bg="Свържи се с нас и научи кога е следващият кръг за споделяне." data-t-en="Contact us and find out when the next sharing circle is." data-field="cta_p">Свържи се с нас и научи кога е следващият кръг за споделяне.</p>
+    <a id="wa-btn" href="https://wa.me/359893679292?text=Здравей, искам да науча повече за кръговете за споделяне!" target="_blank" class="btn" data-wa-key-bg="Здравей, искам да науча повече за кръговете за споделяне!" data-wa-key-en="Hello, I'd like to learn more about the sharing circles!"
+       data-t-bg="Запиши се в WhatsApp" data-t-en="Book via WhatsApp" data-field="wa_btn">Запиши се в WhatsApp</a>
+    <a href="../index.html#schedule" class="btn btn-ghost" data-t-bg="Виж програмата" data-t-en="View schedule" data-field="sched_btn">Виж програмата</a>
+</section>
+
+<div class="footer-strip">
+    © 2026 <a href="../index.html"><span data-t-bg="Пространство Етер" data-t-en="Ether Space">Пространство Етер</span></a> • Разлог • <a href="https://www.instagram.com/eternalstillnes/" target="_blank">@eternalstillnes</a>
+</div>
+
+<script>
+const canvas=document.getElementById('comm-canvas');const ctx=canvas.getContext('2d');let W,H;
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+resize();window.addEventListener('resize',resize);
+const NC=8;
+class Node{constructor(i){this.i=i;this.angle=(i/NC)*Math.PI*2-Math.PI/2;this.ph=Math.random()*Math.PI*2;this.sp=0.008+Math.random()*0.006;this.sz=3+Math.random()*2;}
+pos(){const R=Math.min(W,H)*0.3,w=Math.sin(this.ph)*8;return{x:W/2+Math.cos(this.angle)*(R+w),y:H/2+Math.sin(this.angle)*(R+w)};}
+upd(){this.ph+=this.sp;}
+draw(){const{x,y}=this.pos();const p=0.6+0.4*Math.sin(this.ph);const g=ctx.createRadialGradient(x,y,0,x,y,this.sz*4);g.addColorStop(0,`rgba(212,175,136,${0.8*p})`);g.addColorStop(1,'rgba(212,175,136,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,this.sz*4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x,y,this.sz*p,0,Math.PI*2);ctx.fillStyle=`rgba(212,175,136,${0.9*p})`;ctx.fill();}}
+class Ctr{constructor(){this.ph=0;}upd(){this.ph+=0.012;}draw(){const p=0.7+0.3*Math.sin(this.ph),R=Math.min(W,H)*0.06*p;const g=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,R*3);g.addColorStop(0,`rgba(212,175,136,${0.5*p})`);g.addColorStop(1,'rgba(212,175,136,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(W/2,H/2,R*3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(W/2,H/2,R,0,Math.PI*2);ctx.fillStyle=`rgba(212,175,136,${0.7*p})`;ctx.fill();}}
+class Trav{constructor(f,t){this.f=f;this.t=t;this.ti=0;this.sp=0.004+Math.random()*0.003;}upd(){this.ti+=this.sp;}draw(){if(this.ti>1)return;const fp=this.f.pos(),tp=this.t.pos();const x=fp.x+(tp.x-fp.x)*this.ti,y=fp.y+(tp.y-fp.y)*this.ti;const g=ctx.createRadialGradient(x,y,0,x,y,4);g.addColorStop(0,'rgba(255,240,200,0.9)');g.addColorStop(1,'rgba(212,175,136,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();}done(){return this.ti>=1;}}
+const nodes=[...Array(NC)].map((_,i)=>new Node(i));const ctr=new Ctr();let travs=[];let tt=0;
+function drawConn(){for(let i=0;i<nodes.length;i++){const a=nodes[i].pos(),b=nodes[(i+1)%nodes.length].pos();ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle='rgba(212,175,136,0.1)';ctx.lineWidth=1;ctx.stroke();}nodes.forEach(n=>{const p=n.pos();ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(W/2,H/2);ctx.strokeStyle='rgba(212,175,136,0.07)';ctx.lineWidth=0.8;ctx.stroke();});}
+function anim(){if(W!==canvas.offsetWidth||H!==canvas.offsetHeight)resize();ctx.clearRect(0,0,W,H);drawConn();nodes.forEach(n=>{n.upd();n.draw();});ctr.upd();ctr.draw();tt++;if(tt>45){const fr=nodes[Math.floor(Math.random()*NC)];const fc=Math.random()>0.4;const to=fc?{pos:()=>{return{x:W/2,y:H/2}}}:nodes[Math.floor(Math.random()*NC)];travs.push(new Trav(fr,to));tt=0;}travs=travs.filter(t=>{t.upd();t.draw();return!t.done();});requestAnimationFrame(anim);}
+anim();
+</script>
+
+
+
+
+
+
+
+<script>
+// ── Self-contained lang system (no dependency on translations.js) ──
+const LANG_KEY = 'stillnes_lang';
+const DAYS_EN = {"Понеделник":"Monday","Вторник":"Tuesday","Сряда":"Wednesday","Четвъртък":"Thursday","Петък":"Friday","Събота":"Saturday","Неделя":"Sunday"};
+const DAYS_BG = {"Понеделник":"Понеделник","Вторник":"Вторник","Сряда":"Сряда","Четвъртък":"Четвъртък","Петък":"Петък","Събота":"Събота","Неделя":"Неделя"};
+
+function getLang() { return localStorage.getItem(LANG_KEY) || 'bg'; }
+
+function switchLang(lang) {
+    localStorage.setItem(LANG_KEY, lang);
+    applyLang(lang);
+}
+
+function applyLang(lang) {
+    document.querySelectorAll('[data-t-bg]').forEach(el => {
+        el.textContent = lang === 'en'
+            ? (el.dataset.tEn || el.dataset.tBg)
+            : el.dataset.tBg;
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'bg';
+    // Switch detail blocks
+    document.querySelectorAll('.detail-bg').forEach(el => el.style.display = lang === 'en' ? 'none' : 'block');
+    document.querySelectorAll('.detail-en').forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+    // WhatsApp button
+    const waBtn = document.getElementById('wa-btn');
+    if (waBtn) {
+        const msg = lang === 'en' ? waBtn.dataset.msgEn : waBtn.dataset.msgBg;
+        if (msg) waBtn.href = 'https://wa.me/359893679292?text=' + encodeURIComponent(msg);
+    }
+    // Re-render schedule
+    if (window._schedData) renderSched(window._schedData);
+}
+
+// Schedule
+async function loadSched(filterFn) {
+    window._schedFilter = filterFn;
+    try {
+        const r = await fetch('../programa.json?t=' + Date.now());
+        const data = await r.json();
+        window._schedData = data;
+        const lbl = document.getElementById('week-lbl');
+        if (lbl && data.sedmitza) lbl.textContent = data.sedmitza;
+        renderSched(data);
+    } catch(e) {
+        const tb = document.getElementById('svc-tbody');
+        if (tb) tb.innerHTML = '<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">Следете Instagram за актуална програма.</td></tr>';
+    }
+}
+
+function renderSched(data) {
+    const lang = getLang();
+    const days = lang === 'en' ? DAYS_EN : DAYS_BG;
+    const tbody = document.getElementById('svc-tbody');
+    if (!tbody || !data) return;
+    const filterFn = window._schedFilter;
+    const rows = filterFn ? (data.chasyove || []).filter(filterFn) : (data.chasyove || []);
+    if (!rows.length) {
+        const msg = lang === 'en' ? 'No classes for this practice this week.' : 'Няма часове за тази практика тази седмица.';
+        tbody.innerHTML = `<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">${msg}</td></tr>`;
+    } else {
+        tbody.innerHTML = rows.map(c => `<tr>
+            <td>${days[c.den]||c.den}</td>
+            <td style="font-weight:500">${c.chas}</td>
+            <td style="color:#888">${c.vodesh}</td>
+        </tr>`).join('');
+    }
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', () => applyLang(getLang()));
+</script>
+
+</body>
+</html>

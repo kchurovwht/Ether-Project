@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Звук | Пространство Етер</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af88; --deep: #2a2a3a; --soft: #f8f1e9; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--deep); line-height: 1.7; background: var(--soft); }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .nav { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid #eee; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold); font-weight: 700; text-decoration: none; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .back-link { text-decoration: none; color: var(--deep); font-weight: 500; font-size: 0.95rem; }
+        .back-link:hover { color: var(--gold); }
+        .lang-toggle { display: flex; gap: 2px; background: #f0ebe3; border-radius: 20px; padding: 3px; }
+        .lang-btn { background: none; border: none; cursor: pointer; padding: 5px 11px; border-radius: 16px; font-size: 0.8rem; font-weight: 700; color: #aaa; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .lang-btn.active { background: var(--deep); color: white; }
+        /* Hero */
+        .hero-service { height: 100vh; min-height: 500px; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+        .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(26,26,40,0.1) 0%, rgba(26,26,40,0.65) 100%); }
+        .hero-text { position: relative; z-index: 2; color: white; padding: 2rem; max-width: 700px; }
+        .hero-text h1 { font-size: clamp(2.4rem,8vw,4rem); color: white; margin-bottom: 0.7rem; text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        .hero-tagline { font-size: clamp(1rem,3vw,1.3rem); opacity: 0.82; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 0; }
+        .scroll-hint { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.45; margin-top: 2.5rem; animation: ud 2.4s ease-in-out infinite; }
+        @keyframes ud { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(6px);opacity:.7} }
+        /* Quote */
+        .quote-section { background: var(--deep); padding: clamp(50px,8vw,80px) 5%; text-align: center; }
+        .quote-mark { font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--gold); line-height: 0.4; display: block; margin-bottom: 1.2rem; opacity: 0.55; }
+        .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.15rem,3.5vw,1.6rem); color: white; font-style: italic; max-width: 680px; margin: 0 auto 1rem; line-height: 1.65; }
+        .quote-author { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; }
+        /* Content */
+        .content-section { padding: clamp(60px,10vw,100px) 5%; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+        .two-col h2 { font-size: clamp(1.7rem,4.5vw,2.4rem); margin-bottom: 1.2rem; line-height: 1.3; }
+        .two-col p { font-size: 1rem; color: #444; margin-bottom: 0.9rem; }
+        .two-col p strong { color: var(--deep); }
+        /* Benefits */
+        .benefits-section { background: white; padding: clamp(60px,10vw,100px) 5%; }
+        .benefits-title { text-align: center; font-size: clamp(1.8rem,5vw,2.4rem); margin-bottom: 3rem; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .benefit-card { background: var(--soft); border-radius: 16px; padding: 28px 22px; text-align: center; }
+        .benefit-icon { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+        .benefit-card h3 { font-size: 1rem; margin-bottom: 8px; color: var(--deep); font-family: 'Playfair Display', serif; }
+        .benefit-card p { font-size: 0.88rem; color: #666; line-height: 1.55; }
+        /* Schedule */
+        .week-section { background: var(--soft); padding: clamp(50px,8vw,70px) 5%; }
+        .week-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem,4.5vw,2.2rem); margin-bottom: 0.5rem; text-align: center; }
+        .week-label { text-align: center; color: #aaa; font-size: 0.88rem; margin-bottom: 2rem; }
+        .week-table-wrap { background: white; border-radius: 16px; overflow-x: auto; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+        .week-table-wrap table { width: 100%; border-collapse: collapse; min-width: 300px; }
+        .week-table-wrap th { background: var(--deep); color: white; padding: 14px 18px; text-align: left; font-weight: 500; }
+        .week-table-wrap td { padding: 13px 18px; border-bottom: 1px solid #f0ebe3; font-size: 0.95rem; }
+        .week-table-wrap tr:last-child td { border-bottom: none; }
+        .week-note { text-align: center; margin-top: 1.2rem; font-size: 0.83rem; color: #aaa; font-style: italic; }
+        /* CTA */
+        .cta-section { background: var(--deep); padding: clamp(60px,10vw,100px) 5%; text-align: center; }
+        .cta-section h2 { color: white; font-size: clamp(1.8rem,5vw,2.4rem); margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.72); margin-bottom: 2.5rem; font-size: 1.05rem; }
+        .btn { display: inline-block; padding: 15px 36px; background: var(--gold); color: #222; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; margin: 6px; font-size: 1rem; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(212,175,136,0.4); }
+        .btn-ghost { background: transparent; border: 2px solid rgba(255,255,255,0.45); color: white; }
+        .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+        .footer-strip { background: #141420; color: rgba(255,255,255,0.38); text-align: center; padding: 24px; font-size: 0.83rem; }
+        .footer-strip a { color: var(--gold); text-decoration: none; }
+        /* Responsive */
+        @media (max-width: 680px) { .two-col { grid-template-columns: 1fr; gap: 36px; } .benefits-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 380px) { .benefits-grid { grid-template-columns: 1fr; } }
+        .hero-service { background: #0d0d18; }
+        #gong-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .detail-en { display: none; }
+        </style>
+</head>
+<body>
+<nav class="nav">
+    <a href="../index.html" class="logo">Етер</a>
+    <div class="nav-right">
+        <a href="../index.html" class="back-link">← <span data-t-bg="Начало" data-t-en="Home">Начало</span></a>
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="bg" onclick="switchLang('bg')">BG</button>
+            <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
+        </div>
+    </div>
+</nav>
+
+<section class="hero-service">
+    <canvas id="gong-canvas" class="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+        <h1 data-t-bg="Звук" data-t-en="Sound" data-field="title">Звук</h1>
+        <p class="hero-tagline" data-t-bg="Звукови пътувания с гонг" data-t-en="Sound journeys with gong" data-field="tag">Звукови пътувания с гонг</p>
+        <p class="scroll-hint">↓ &nbsp; <span data-t-bg="Открий повече" data-t-en="Discover more" data-field="discover">Открий повече</span></p>
+    </div>
+</section>
+
+<div class="quote-section">
+    <span class="quote-mark">"</span>
+    <p class="quote-text" data-t-bg="Звукът е силата на сътворението. Гонгът е портал към вътрешната вселена." data-t-en="Sound is the force of creation. The gong is a portal to the inner universe." data-field="quote">Звукът е силата на сътворението. Гонгът е портал към вътрешната вселена.</p>
+    <p class="quote-author" data-t-bg="— Традиция на звуковото лечение" data-t-en="— Sound healing tradition" data-field="q_author">— Традиция на звуковото лечение</p>
+</div>
+
+<section class="content-section">
+    <div class="container">
+        <div class="two-col">
+            <div>
+                <h2 data-t-bg="Звукова медитация с гонг" data-t-en="Gong sound meditation">Звукова медитация с гонг</h2>
+                <p data-t-bg="Гонг медитацията е интензивно звуково пътуване. Легнал/а удобно на постелка, просто се отдаваш на звука — тялото и умът постепенно навлизат в дълбоко медитативно състояние." data-t-en="A gong meditation is an intensive sound journey. Lying comfortably on a mat, you simply surrender to the sound — body and mind gradually enter a deep meditative state.">Гонг медитацията е интензивно звуково пътуване. Легнал/а удобно на постелка, просто се отдаваш на звука — тялото и умът постепенно навлизат в дълбоко медитативно състояние.</p>
+                <p data-t-bg="Вибрациите на гонга проникват дълбоко в тъканите и освобождават емоционални и физически напрежения, натрупани с времето." data-t-en="The gong's vibrations penetrate deep into the tissues, releasing emotional and physical tensions accumulated over time.">Вибрациите на гонга проникват дълбоко в тъканите и освобождават емоционални и физически напрежения, натрупани с времето.</p>
+            </div>
+            <div>
+                <h2 data-t-bg="Практически детайли" data-t-en="Practical details">Практически детайли</h2>
+                
+                <p><strong data-t-bg="Водещ" data-t-en="Teacher">Водещ</strong>: <span data-t-bg="Кристиана" data-t-en="Kristiana">Кристиана</span></p><br>
+                <p><strong data-t-bg="Адрес" data-t-en="Address">Адрес</strong>: ул. „Свети Климент Охридски" 3, Разлог</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <h2 class="benefits-title" data-t-bg="Ползи от практиката" data-t-en="Benefits" data-field="ben_title">Ползи от практиката</h2>
+    <div class="benefits-grid">
+        
+            <div class="benefit-card">
+                <span class="benefit-icon">🌊</span>
+                <h3 data-t-bg="Дълбоко освобождаване" data-t-en="Deep release">Дълбоко освобождаване</h3>
+                <p data-t-bg="Вибрациите достигат до слоеве, до които съзнателният ум трудно стига." data-t-en="Vibrations reach layers the conscious mind can barely access.">Вибрациите достигат до слоеве, до които съзнателният ум трудно стига.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">🧘</span>
+                <h3 data-t-bg="Медитативни състояния" data-t-en="Meditative states">Медитативни състояния</h3>
+                <p data-t-bg="Гонгът отвежда умът отвъд мислите — в чисто присъствие и тишина." data-t-en="The gong carries the mind beyond thought — into pure presence and silence.">Гонгът отвежда умът отвъд мислите — в чисто присъствие и тишина.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">💤</span>
+                <h3 data-t-bg="Дълбок сън" data-t-en="Deep sleep">Дълбок сън</h3>
+                <p data-t-bg="Много хора съобщават за значително подобрение в качеството на съня след сесия." data-t-en="Many report significant improvement in sleep quality after a session.">Много хора съобщават за значително подобрение в качеството на съня след сесия.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">✨</span>
+                <h3 data-t-bg="Яснота и лекота" data-t-en="Clarity & lightness">Яснота и лекота</h3>
+                <p data-t-bg="След сесията светът изглежда по-светъл, умът — по-ясен." data-t-en="After the session the world feels brighter, the mind clearer.">След сесията светът изглежда по-светъл, умът — по-ясен.</p>
+            </div>
+    </div>
+</section>
+
+<section class="week-section">
+    <div class="container">
+        <h2 data-t-bg="Часове тази седмица" data-t-en="Classes this week">Часове тази седмица</h2>
+        <p class="week-label" id="week-lbl"></p>
+        <div class="week-table-wrap">
+            <table>
+                <thead><tr>
+                    <th data-t-bg="Ден" data-t-en="Day">Ден</th>
+                    <th data-t-bg="Час" data-t-en="Time">Час</th>
+                    <th data-t-bg="Водещ" data-t-en="Teacher">Водещ</th>
+                </tr></thead>
+                <tbody id="svc-tbody">
+                    <tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="week-note" data-t-bg="* Следете Instagram за актуална програма." data-t-en="* Follow Instagram for the latest schedule.">* Следете Instagram за актуална програма.</p>
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2 data-t-bg="Готов/а за пътуването?" data-t-en="Ready for the journey?">Готов/а за пътуването?</h2>
+    <p data-t-bg="Свържи се с Кристиана и запази своето място за следващата гонг сесия." data-t-en="Message Kristiana and reserve your spot for the next gong session.">Свържи се с Кристиана и запази своето място за следващата гонг сесия.</p>
+    <a id="wa-btn" href="https://wa.me/359893679292?text=Здравей, искам да се запиша за Гонг медитация!" target="_blank" class="btn"
+       data-wa-key-bg="Здравей, искам да се запиша за Гонг медитация!" data-wa-key-en="Hello, I'd like to book a Gong meditation session!"
+       data-t-bg="Запиши се в WhatsApp" data-t-en="Book via WhatsApp">Запиши се в WhatsApp</a>
+    <a href="../index.html#schedule" class="btn btn-ghost"
+       data-t-bg="Виж програмата" data-t-en="View schedule">Виж програмата</a>
+</section>
+
+<div class="footer-strip">
+    © 2026 <a href="../index.html"><span data-t-bg="Пространство Етер" data-t-en="Ether Space">Пространство Етер</span></a> • Разлог • <a href="https://www.instagram.com/eternalstillnes/" target="_blank">@eternalstillnes</a>
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+// ── Self-contained lang system (no dependency on translations.js) ──
+const LANG_KEY = 'stillnes_lang';
+const DAYS_EN = {"Понеделник":"Monday","Вторник":"Tuesday","Сряда":"Wednesday","Четвъртък":"Thursday","Петък":"Friday","Събота":"Saturday","Неделя":"Sunday"};
+const DAYS_BG = {"Понеделник":"Понеделник","Вторник":"Вторник","Сряда":"Сряда","Четвъртък":"Четвъртък","Петък":"Петък","Събота":"Събота","Неделя":"Неделя"};
+
+function getLang() { return localStorage.getItem(LANG_KEY) || 'bg'; }
+
+function switchLang(lang) {
+    localStorage.setItem(LANG_KEY, lang);
+    applyLang(lang);
+}
+
+function applyLang(lang) {
+    document.querySelectorAll('[data-t-bg]').forEach(el => {
+        el.textContent = lang === 'en'
+            ? (el.dataset.tEn || el.dataset.tBg)
+            : el.dataset.tBg;
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'bg';
+    // Switch detail blocks
+    document.querySelectorAll('.detail-bg').forEach(el => el.style.display = lang === 'en' ? 'none' : 'block');
+    document.querySelectorAll('.detail-en').forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+    // WhatsApp button
+    const waBtn = document.getElementById('wa-btn');
+    if (waBtn) {
+        const msg = lang === 'en' ? waBtn.dataset.waKeyEn : waBtn.dataset.waKeyBg;
+        if (msg) waBtn.href = 'https://wa.me/359893679292?text=' + encodeURIComponent(msg);
+    }
+    // Re-render schedule
+    if (window._schedData) renderSched(window._schedData);
+}
+
+// Schedule
+async function loadSched(filterFn) {
+    window._schedFilter = filterFn;
+    try {
+        const r = await fetch('../programa.json?t=' + Date.now());
+        const data = await r.json();
+        window._schedData = data;
+        const lbl = document.getElementById('week-lbl');
+        if (lbl && data.sedmitza) lbl.textContent = data.sedmitza;
+        renderSched(data);
+    } catch(e) {
+        const tb = document.getElementById('svc-tbody');
+        if (tb) tb.innerHTML = '<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">Следете Instagram за актуална програма.</td></tr>';
+    }
+}
+
+function renderSched(data) {
+    const lang = getLang();
+    const days = lang === 'en' ? DAYS_EN : DAYS_BG;
+    const tbody = document.getElementById('svc-tbody');
+    if (!tbody || !data) return;
+    const filterFn = window._schedFilter;
+    const rows = filterFn ? (data.chasyove || []).filter(filterFn) : (data.chasyove || []);
+    if (!rows.length) {
+        const msg = lang === 'en' ? 'No classes for this practice this week.' : 'Няма часове за тази практика тази седмица.';
+        tbody.innerHTML = `<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">${msg}</td></tr>`;
+    } else {
+        tbody.innerHTML = rows.map(c => `<tr>
+            <td>${days[c.den]||c.den}</td>
+            <td style="font-weight:500">${c.chas}</td>
+            <td style="color:#888">${c.vodesh}</td>
+        </tr>`).join('');
+    }
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', () => applyLang(getLang()));
+</script>
+
+<script>
+const canvas = document.getElementById('gong-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+class GongWave {
+    constructor(delay) {
+        this.delay = delay;
+        this.age = -delay;
+        this.r = 0;
+        this.maxR = Math.sqrt(W*W + H*H) * 0.6;
+        this.thickness = 1.2 + Math.random() * 2.5;
+        this.hue = 30 + Math.random() * 20;
+        this.speed = 0.28 + Math.random() * 0.12;
+    }
+    update() {
+        this.age += 0.18;
+        if (this.age > 0) this.r += this.speed;
+    }
+    draw() {
+        if (this.age <= 0 || this.r <= 0) return;
+        const progress = this.r / this.maxR;
+        const alpha = progress < 0.08
+            ? (progress / 0.08) * 0.7
+            : 0.7 * Math.pow(1 - (progress - 0.08) / 0.92, 1.6);
+        if (alpha <= 0) return;
+        ctx.beginPath();
+        ctx.arc(W/2, H/2, this.r, 0, Math.PI*2);
+        ctx.strokeStyle = `hsla(${this.hue}, 55%, 72%, ${alpha})`;
+        ctx.lineWidth = this.thickness;
+        ctx.stroke();
+    }
+    isDone() { return this.age > 0 && this.r >= this.maxR; }
+}
+
+let waves = [];
+let strikeTimer = 0;
+const STRIKE_INTERVAL = 520;
+const WAVES_PER_STRIKE = 8;
+const INNER_SPREAD = 55;
+
+function spawnStrike() {
+    for (let i = 0; i < WAVES_PER_STRIKE; i++) {
+        waves.push(new GongWave(i * INNER_SPREAD));
+    }
+}
+spawnStrike();
+
+function drawGlow() {
+    const intensity = Math.max(0, 1 - (strikeTimer / 200));
+    if (intensity <= 0) return;
+    const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.18);
+    grad.addColorStop(0, `rgba(212,175,136,${0.35 * intensity})`);
+    grad.addColorStop(0.4, `rgba(212,175,136,${0.1 * intensity})`);
+    grad.addColorStop(1, 'rgba(212,175,136,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(W/2, H/2, W * 0.18, 0, Math.PI*2);
+    ctx.fill();
+}
+
+function animate() {
+    if (W !== canvas.offsetWidth || H !== canvas.offsetHeight) {
+        resize(); waves = []; spawnStrike(); strikeTimer = 0;
+    }
+    ctx.clearRect(0, 0, W, H);
+    drawGlow();
+    waves = waves.filter(w => { w.update(); w.draw(); return !w.isDone(); });
+    strikeTimer++;
+    if (strikeTimer >= STRIKE_INTERVAL) { spawnStrike(); strikeTimer = 0; }
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

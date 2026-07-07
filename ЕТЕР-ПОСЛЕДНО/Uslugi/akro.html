@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-t-title="akro_h1">Акро Йога | Stillnes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="../translations.js"></script>
+    <style>
+        :root { --gold: #d4af88; --deep: #2a2a3a; --soft: #f8f1e9; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--deep); line-height: 1.7; background: var(--soft); }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        .nav { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid #eee; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold); font-weight: 700; text-decoration: none; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .back-link { text-decoration: none; color: var(--deep); font-weight: 500; font-size: 0.95rem; }
+        .back-link:hover { color: var(--gold); }
+        .lang-toggle { display: flex; gap: 2px; background: #f0ebe3; border-radius: 20px; padding: 3px; }
+        .lang-btn { background: none; border: none; cursor: pointer; padding: 5px 11px; border-radius: 16px; font-size: 0.8rem; font-weight: 700; color: #aaa; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .lang-btn.active { background: var(--deep); color: white; }
+
+        .hero-service { height: 100vh; min-height: 500px; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background: #1a1a28; }
+        #akro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(26,26,40,0.1) 0%, rgba(26,26,40,0.6) 100%); }
+        .hero-text { position: relative; z-index: 2; color: white; padding: 2rem; }
+        .hero-text h1 { font-size: clamp(2.4rem,8vw,4rem); color: white; margin-bottom: 0.6rem; text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        .hero-text .tagline { font-size: clamp(1rem,3.5vw,1.4rem); opacity: 0.85; font-style: italic; font-family: 'Playfair Display', serif; }
+        .scroll-hint { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; margin-top: 2.5rem; animation: fadeUpDown 2.4s ease-in-out infinite; }
+        @keyframes fadeUpDown { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(6px);opacity:.7} }
+
+        .quote-section { background: var(--deep); padding: clamp(50px,8vw,80px) 5%; text-align: center; }
+        .quote-mark { font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--gold); line-height: 0.5; display: block; margin-bottom: 1rem; opacity: 0.6; }
+        .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem,4vw,1.7rem); color: white; font-style: italic; max-width: 700px; margin: 0 auto 1rem; line-height: 1.6; }
+        .quote-author { color: var(--gold); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .content-section { padding: clamp(60px,10vw,100px) 5%; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+        .intro-grid h2 { font-size: clamp(1.8rem,5vw,2.5rem); margin-bottom: 1.2rem; }
+        .intro-grid p { font-size: 1.05rem; color: #444; margin-bottom: 1rem; }
+
+        .benefits-section { background: white; padding: clamp(60px,10vw,100px) 5%; }
+        .benefits-title { text-align: center; font-size: clamp(1.8rem,5vw,2.5rem); margin-bottom: 3rem; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .benefit-card { background: var(--soft); border-radius: 16px; padding: 28px 22px; text-align: center; }
+        .benefit-icon { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+        .benefit-card h3 { font-size: 1rem; margin-bottom: 8px; }
+        .benefit-card p { font-size: 0.88rem; color: #666; line-height: 1.5; }
+
+        .week-section { background: var(--soft); padding: clamp(50px,8vw,70px) 5%; }
+        .week-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem,5vw,2.2rem); margin-bottom: 0.5rem; text-align: center; }
+        .week-label { text-align: center; color: #aaa; font-size: 0.9rem; margin-bottom: 2rem; }
+        .week-table-wrap { background: white; border-radius: 16px; overflow-x: auto; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+        .week-table-wrap table { width: 100%; border-collapse: collapse; min-width: 320px; }
+        .week-table-wrap th { background: var(--deep); color: white; padding: 14px 18px; text-align: left; }
+        .week-table-wrap td { padding: 13px 18px; border-bottom: 1px solid #f0ebe3; }
+        .week-table-wrap tr:last-child td { border-bottom: none; }
+        .week-note { text-align: center; margin-top: 1.2rem; font-size: 0.85rem; color: #aaa; font-style: italic; }
+
+        .cta-section { background: var(--deep); padding: clamp(60px,10vw,100px) 5%; text-align: center; }
+        .cta-section h2 { color: white; font-size: clamp(1.8rem,5vw,2.5rem); margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.75); margin-bottom: 2.5rem; font-size: 1.05rem; }
+        .btn { display: inline-block; padding: 15px 36px; background: var(--gold); color: #222; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; margin: 6px; font-size: 1rem; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(212,175,136,0.4); }
+        .btn-ghost { background: transparent; border: 2px solid rgba(255,255,255,0.5); color: white; }
+        .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+        .footer-strip { background: #141420; color: rgba(255,255,255,0.4); text-align: center; padding: 24px; font-size: 0.85rem; }
+        .footer-strip a { color: var(--gold); text-decoration: none; }
+
+        @media (max-width: 680px) { .intro-grid { grid-template-columns: 1fr; gap: 32px; } .benefits-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 380px) { .benefits-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <a href="../index.html" class="logo">Stillnes</a>
+    <div class="nav-right">
+        <a href="../index.html" class="back-link" data-t="svc_back">← Начало</a>
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="bg" onclick="setLang('bg')">BG</button>
+            <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+    </div>
+</nav>
+
+<section class="hero-service">
+    <canvas id="akro-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+        <h1 data-t="akro_h1">Акро Йога</h1>
+        <p class="tagline" data-t="akro_tag"></p>
+        <p class="scroll-hint" data-t="akro_scroll">↓  Открий повече</p>
+    </div>
+</section>
+
+<div class="quote-section">
+    <span class="quote-mark">"</span>
+    <p class="quote-text" data-t="akro_quote"></p>
+    <p class="quote-author" data-t="akro_q_author"></p>
+</div>
+
+<section class="content-section">
+    <div class="container">
+        <div class="intro-grid">
+            <div>
+                <h2 data-t="akro_what_h"></h2>
+                <p data-t="akro_what_p1"></p>
+                <p data-t="akro_what_p2"></p>
+            </div>
+            <div>
+                <h2 data-t="akro_detail_h"></h2>
+                <p><strong data-t="yoga_days">Дни</strong>: <span data-t="akro_days_v"></span></p>
+<p><strong data-t="about_address">Адрес</strong>: ул. „Свети Климент Охридски" 3, Разлог</p>
+<p><strong data-t="yoga_for">Подходящо за</strong>: <span data-t="akro_for_v"></span></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <h2 class="benefits-title" data-t="akro_ben_h"></h2>
+    <div class="benefits-grid">
+        
+        <div class="benefit-card">
+            <span class="benefit-icon" id="akro-icon1"></span>
+            <h3 data-t="akro_b1_h"></h3>
+            <p data-t="akro_b1_p"></p>
+        </div>
+        <div class="benefit-card">
+            <span class="benefit-icon" id="akro-icon2"></span>
+            <h3 data-t="akro_b2_h"></h3>
+            <p data-t="akro_b2_p"></p>
+        </div>
+        <div class="benefit-card">
+            <span class="benefit-icon" id="akro-icon3"></span>
+            <h3 data-t="akro_b3_h"></h3>
+            <p data-t="akro_b3_p"></p>
+        </div>
+        <div class="benefit-card">
+            <span class="benefit-icon" id="akro-icon4"></span>
+            <h3 data-t="akro_b4_h"></h3>
+            <p data-t="akro_b4_p"></p>
+        </div>
+    </div>
+</section>
+
+<!-- Weekly schedule -->
+<section class="week-section">
+    <div>
+        <h2 data-t="svc_week_title">Часове тази седмица</h2>
+        <p class="week-label" id="svc-week-label"></p>
+        <div class="week-table-wrap">
+            <table>
+                <thead><tr>
+                    <th data-t="svc_th_day">Ден</th>
+                    <th data-t="svc_th_time">Час</th>
+                    <th data-t="svc_th_teacher">Водещ</th>
+                </tr></thead>
+                <tbody id="svc-tbody"><tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">...</td></tr></tbody>
+            </table>
+        </div>
+        <p class="week-note" data-t="svc_ig_note"></p>
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2 data-t="akro_cta_h"></h2>
+    <p data-t="akro_cta_p"></p>
+    <a id="wa-btn" href="https://wa.me/359893679292" target="_blank" class="btn" data-t="svc_book_wa">Запиши се в WhatsApp</a>
+    <a href="../index.html#schedule" class="btn btn-ghost" data-t="svc_see_schedule">Виж програмата</a>
+</section>
+
+<div class="footer-strip">
+    © 2026 <a href="../index.html">Stillnes</a> • Разлог • <a href="https://www.instagram.com/eternalstillnes/" target="_blank">@eternalstillnes</a>
+</div>
+
+<script>
+const canvas=document.getElementById('akro-canvas');const ctx=canvas.getContext('2d');let W,H;
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+resize();window.addEventListener('resize',resize);
+class Particle{constructor(g){this.groupId=g;this.reset();}reset(){const side=this.groupId===0?0.35:0.65;this.x=W*side+(Math.random()-0.5)*W*0.22;this.y=H*0.5+(Math.random()-0.5)*H*0.4;this.vx=(Math.random()-0.5)*0.6;this.vy=(Math.random()-0.5)*0.6;this.size=1.5+Math.random()*2.5;this.alpha=0.15+Math.random()*0.55;this.life=0;this.maxLife=220+Math.random()*180;}update(a){const dx=a.x-this.x,dy=a.y-this.y,dist=Math.sqrt(dx*dx+dy*dy)||1,force=0.012/dist;this.vx+=dx*force;this.vy+=dy*force;this.vx*=0.985;this.vy*=0.985;this.x+=this.vx;this.y+=this.vy;this.life++;}draw(){const p=this.life/this.maxLife,fade=p<0.15?p/0.15:1-(p-0.15)/0.85,a=this.alpha*fade,col=this.groupId===0?'rgba(212,175,136,':'rgba(200,210,230,';ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=col+a+')';ctx.fill();}isDone(){return this.life>=this.maxLife;}}
+const centers=[{x:0,y:0},{x:0,y:0}];
+let particles=[];for(let i=0;i<80;i++)particles.push(new Particle(i%2));
+function drawConn(){const g0=particles.filter(p=>p.groupId===0),g1=particles.filter(p=>p.groupId===1);g0.forEach(p0=>{g1.forEach(p1=>{const dx=p1.x-p0.x,dy=p1.y-p0.y,d=Math.sqrt(dx*dx+dy*dy);if(d<90){ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.strokeStyle=`rgba(212,175,136,${(1-d/90)*0.12})`;ctx.lineWidth=0.8;ctx.stroke();}});});}
+function animate(){if(W!==canvas.offsetWidth||H!==canvas.offsetHeight){resize();particles=[];for(let i=0;i<80;i++)particles.push(new Particle(i%2));}ctx.clearRect(0,0,W,H);[0,1].forEach(g=>{const grp=particles.filter(p=>p.groupId===g);if(!grp.length)return;centers[g].x=grp.reduce((s,p)=>s+p.x,0)/grp.length;centers[g].y=grp.reduce((s,p)=>s+p.y,0)/grp.length;});drawConn();particles=particles.filter(p=>{p.update(centers[1-p.groupId]);p.draw();return!p.isDone();});while(particles.length<80)particles.push(new Particle(particles.length%2));requestAnimationFrame(animate);}
+animate();
+document.getElementById('akro-icon1').textContent='🤝';
+document.getElementById('akro-icon2').textContent='⚡';
+document.getElementById('akro-icon3').textContent='😄';
+document.getElementById('akro-icon4').textContent='🌐';
+</script>
+
+<script>
+// Schedule
+let svcData = null;
+async function loadSvcSchedule() {
+    try {
+        const r = await fetch('../programa.json?t=' + Date.now());
+        svcData = await r.json();
+        const lbl = document.getElementById('svc-week-label');
+        if (svcData.sedmitza) lbl.textContent = svcData.sedmitza;
+    } catch(e) { svcData = null; }
+    renderServiceSchedule();
+}
+function renderServiceSchedule() {
+    const lang = getLang();
+    const days = T[lang].days;
+    const tbody = document.getElementById('svc-tbody');
+    if (!svcData || !svcData.chasyove) {
+        tbody.innerHTML = `<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">${t('svc_no_classes')}</td></tr>`;
+        return;
+    }
+    const rows = svcData.chasyove.filter(c => c.vid==='akro');
+    if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">${t('svc_no_classes')}</td></tr>`;
+    } else {
+        tbody.innerHTML = rows.map(c => `<tr>
+            <td>${days[c.den] || c.den}</td>
+            <td style="font-weight:500">${c.chas}</td>
+            <td style="color:#888">${c.vodesh}</td>
+        </tr>`).join('');
+    }
+    // Update WhatsApp link with translated message
+    const waMsg = t('akro_wa_msg');
+    document.getElementById('wa-btn').href = 'https://wa.me/359893679292?text=' + encodeURIComponent(waMsg);
+}
+loadSvcSchedule();
+initLang();
+</script>
+</body>
+</html>

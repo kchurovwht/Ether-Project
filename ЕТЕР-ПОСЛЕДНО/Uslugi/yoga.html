@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-t-title="yoga_h1">Йога за теб | Stillnes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="../translations.js"></script>
+    <style>
+        :root { --gold: #d4af88; --deep: #2a2a3a; --soft: #f8f1e9; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--deep); line-height: 1.7; background: var(--soft); }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        .nav { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid #eee; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold); font-weight: 700; text-decoration: none; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .back-link { text-decoration: none; color: var(--deep); font-weight: 500; font-size: 0.95rem; }
+        .back-link:hover { color: var(--gold); }
+        .lang-toggle { display: flex; gap: 2px; background: #f0ebe3; border-radius: 20px; padding: 3px; }
+        .lang-btn { background: none; border: none; cursor: pointer; padding: 5px 11px; border-radius: 16px; font-size: 0.8rem; font-weight: 700; color: #aaa; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .lang-btn.active { background: var(--deep); color: white; }
+
+        .hero-service { height: 100vh; min-height: 500px; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background: #1a1a28; }
+        #ripple-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(26,26,40,0.1) 0%, rgba(26,26,40,0.6) 100%); }
+        .hero-text { position: relative; z-index: 2; color: white; padding: 2rem; }
+        .hero-text h1 { font-size: clamp(2.4rem,8vw,4rem); color: white; margin-bottom: 0.6rem; text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        .hero-text .tagline { font-size: clamp(1rem,3.5vw,1.4rem); opacity: 0.85; font-style: italic; font-family: 'Playfair Display', serif; }
+        .scroll-hint { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; margin-top: 2.5rem; animation: fadeUpDown 2.4s ease-in-out infinite; }
+        @keyframes fadeUpDown { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(6px);opacity:.7} }
+
+        .quote-section { background: var(--deep); padding: clamp(50px,8vw,80px) 5%; text-align: center; }
+        .quote-mark { font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--gold); line-height: 0.5; display: block; margin-bottom: 1rem; opacity: 0.6; }
+        .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem,4vw,1.7rem); color: white; font-style: italic; max-width: 700px; margin: 0 auto 1rem; line-height: 1.6; }
+        .quote-author { color: var(--gold); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .content-section { padding: clamp(60px,10vw,100px) 5%; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+        .intro-grid h2 { font-size: clamp(1.8rem,5vw,2.5rem); margin-bottom: 1.2rem; }
+        .intro-grid p { font-size: 1.05rem; color: #444; margin-bottom: 1rem; }
+
+        .benefits-section { background: white; padding: clamp(60px,10vw,100px) 5%; }
+        .benefits-title { text-align: center; font-size: clamp(1.8rem,5vw,2.5rem); margin-bottom: 3rem; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .benefit-card { background: var(--soft); border-radius: 16px; padding: 28px 22px; text-align: center; }
+        .benefit-icon { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+        .benefit-card h3 { font-size: 1rem; margin-bottom: 8px; }
+        .benefit-card p { font-size: 0.88rem; color: #666; line-height: 1.5; }
+
+        .week-section { background: var(--soft); padding: clamp(50px,8vw,70px) 5%; }
+        .week-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem,5vw,2.2rem); margin-bottom: 0.5rem; text-align: center; }
+        .week-label { text-align: center; color: #aaa; font-size: 0.9rem; margin-bottom: 2rem; }
+        .week-table-wrap { background: white; border-radius: 16px; overflow-x: auto; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+        .week-table-wrap table { width: 100%; border-collapse: collapse; min-width: 320px; }
+        .week-table-wrap th { background: var(--deep); color: white; padding: 14px 18px; text-align: left; }
+        .week-table-wrap td { padding: 13px 18px; border-bottom: 1px solid #f0ebe3; }
+        .week-table-wrap tr:last-child td { border-bottom: none; }
+        .week-note { text-align: center; margin-top: 1.2rem; font-size: 0.85rem; color: #aaa; font-style: italic; }
+
+        .cta-section { background: var(--deep); padding: clamp(60px,10vw,100px) 5%; text-align: center; }
+        .cta-section h2 { color: white; font-size: clamp(1.8rem,5vw,2.5rem); margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.75); margin-bottom: 2.5rem; font-size: 1.05rem; }
+        .btn { display: inline-block; padding: 15px 36px; background: var(--gold); color: #222; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; margin: 6px; font-size: 1rem; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(212,175,136,0.4); }
+        .btn-ghost { background: transparent; border: 2px solid rgba(255,255,255,0.5); color: white; }
+        .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+        .footer-strip { background: #141420; color: rgba(255,255,255,0.4); text-align: center; padding: 24px; font-size: 0.85rem; }
+        .footer-strip a { color: var(--gold); text-decoration: none; }
+
+        @media (max-width: 680px) { .intro-grid { grid-template-columns: 1fr; gap: 32px; } .benefits-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 380px) { .benefits-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <a href="../index.html" class="logo">Stillnes</a>
+    <div class="nav-right">
+        <a href="../index.html" class="back-link" data-t="svc_back">← Начало</a>
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="bg" onclick="setLang('bg')">BG</button>
+            <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+    </div>
+</nav>
+
+<section class="hero-service">
+    <canvas id="ripple-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+        <h1 data-t="yoga_h1">Йога за теб</h1>
+        <p class="tagline" data-t="yoga_tag"></p>
+        <p class="scroll-hint" data-t="yoga_scroll">↓  Открий повече</p>
+    </div>
+</section>
+
+<div class="quote-section">
+    <span class="quote-mark">"</span>
+    <p class="quote-text" data-t="yoga_quote"></p>
+    <p class="quote-author" data-t="yoga_q_author"></p>
+</div>
+
+<section class="content-section">
+    <div class="container">
+        <div class="intro-grid">
+            <div>
+                <h2 data-t="yoga_what_h"></h2>
+                <p data-t="yoga_what_p1"></p>
+                <p data-t="yoga_what_p2"></p>
+            </div>
+            <div>
+                <h2 data-t="yoga_detail_h"></h2>
+                <p><strong data-t="yoga_teacher">Водещ</strong>: <span data-t="yoga_teacher_name" id="yoga-teacher-name"></span></p>
+<p><strong data-t="yoga_days">Дни</strong>: <span data-t="yoga_days_v"></span></p>
+<p><strong data-t="about_address">Адрес</strong>: ул. „Свети Климент Охридски" 3, Разлог</p>
+<p><strong data-t="yoga_for">Подходящо за</strong>: <span data-t="yoga_for_v"></span></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <h2 class="benefits-title" data-t="yoga_ben_h"></h2>
+    <div class="benefits-grid">
+        
+        <div class="benefit-card">
+            <span class="benefit-icon" id="yoga-icon1"></span>
+            <h3 data-t="yoga_b1_h"></h3>
+            <p data-t="yoga_b1_p"></p>
+        </div>
+        <div class="benefit-card">
+            <span class="benefit-icon" id="yoga-icon2"></span>
+            <h3 data-t="yoga_b2_h"></h3>
+            <p data-t="yoga_b2_p"></p>
+        </div>
+        <div class="benefit-card">
+            <span class="benefit-icon" id="yoga-icon3"></span>
+            <h3 data-t="yoga_b3_h"></h3>
+            <p data-t="yoga_b3_p"></p>
+        </div>
+        <div class="benefit-card">
+            <span class="benefit-icon" id="yoga-icon4"></span>
+            <h3 data-t="yoga_b4_h"></h3>
+            <p data-t="yoga_b4_p"></p>
+        </div>
+    </div>
+</section>
+
+<!-- Weekly schedule -->
+<section class="week-section">
+    <div>
+        <h2 data-t="svc_week_title">Часове тази седмица</h2>
+        <p class="week-label" id="svc-week-label"></p>
+        <div class="week-table-wrap">
+            <table>
+                <thead><tr>
+                    <th data-t="svc_th_day">Ден</th>
+                    <th data-t="svc_th_time">Час</th>
+                    <th data-t="svc_th_teacher">Водещ</th>
+                </tr></thead>
+                <tbody id="svc-tbody"><tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">...</td></tr></tbody>
+            </table>
+        </div>
+        <p class="week-note" data-t="svc_ig_note"></p>
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2 data-t="yoga_cta_h"></h2>
+    <p data-t="yoga_cta_p"></p>
+    <a id="wa-btn" href="https://wa.me/359893679292" target="_blank" class="btn" data-t="svc_book_wa">Запиши се в WhatsApp</a>
+    <a href="../index.html#schedule" class="btn btn-ghost" data-t="svc_see_schedule">Виж програмата</a>
+</section>
+
+<div class="footer-strip">
+    © 2026 <a href="../index.html">Stillnes</a> • Разлог • <a href="https://www.instagram.com/eternalstillnes/" target="_blank">@eternalstillnes</a>
+</div>
+
+<script>
+const canvas = document.getElementById('ripple-canvas');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight; }
+resize(); window.addEventListener('resize',resize);
+class Ring { constructor(x,y,delay){ this.x=x;this.y=y;this.r=0;this.maxR=Math.max(canvas.width,canvas.height)*0.75;this.alpha=0;this.speed=0.55+Math.random()*0.3;this.delay=delay;this.age=-delay;this.thickness=1+Math.random()*1.2; } update(){ this.age+=0.4;if(this.age<0)return;this.r+=this.speed;const p=this.r/this.maxR;this.alpha=p<0.15?(p/0.15)*0.5:0.5*(1-(p-0.15)/0.85); } draw(){ if(this.age<0||this.alpha<=0)return;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.strokeStyle=`rgba(212,175,136,${this.alpha})`;ctx.lineWidth=this.thickness;ctx.stroke(); } isDone(){ return this.age>=0&&this.r>=this.maxR; } }
+const sources=[{xFrac:0.5,yFrac:0.5},{xFrac:0.2,yFrac:0.7},{xFrac:0.8,yFrac:0.3}];
+let rings=[];
+function spawnRings(){ sources.forEach((s,si)=>{ for(let i=0;i<7;i++){ const x=s.xFrac*canvas.width,y=s.yFrac*canvas.height; rings.push(new Ring(x,y,si*80+i*120)); } }); }
+spawnRings();
+function animate(){ if(canvas.width!==canvas.offsetWidth||canvas.height!==canvas.offsetHeight){resize();rings=[];spawnRings();} ctx.clearRect(0,0,canvas.width,canvas.height); rings=rings.filter(r=>{r.update();r.draw();return!r.isDone();}); if(rings.length<3)spawnRings(); requestAnimationFrame(animate); }
+animate();
+document.getElementById('yoga-icon1').textContent='🌿';
+document.getElementById('yoga-icon2').textContent='🌬️';
+document.getElementById('yoga-icon3').textContent='🧠';
+document.getElementById('yoga-icon4').textContent='💛';
+</script>
+
+<script>
+// Schedule
+let svcData = null;
+async function loadSvcSchedule() {
+    try {
+        const r = await fetch('../programa.json?t=' + Date.now());
+        svcData = await r.json();
+        const lbl = document.getElementById('svc-week-label');
+        if (svcData.sedmitza) lbl.textContent = svcData.sedmitza;
+    } catch(e) { svcData = null; }
+    renderServiceSchedule();
+}
+function renderServiceSchedule() {
+    const lang = getLang();
+    const days = T[lang].days;
+    const tbody = document.getElementById('svc-tbody');
+    if (!svcData || !svcData.chasyove) {
+        tbody.innerHTML = `<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">${t('svc_no_classes')}</td></tr>`;
+        return;
+    }
+    const rows = svcData.chasyove.filter(c => c.vid==='yoga');
+    if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:#aaa;">${t('svc_no_classes')}</td></tr>`;
+    } else {
+        tbody.innerHTML = rows.map(c => `<tr>
+            <td>${days[c.den] || c.den}</td>
+            <td style="font-weight:500">${c.chas}</td>
+            <td style="color:#888">${c.vodesh}</td>
+        </tr>`).join('');
+    }
+    // Update WhatsApp link with translated message
+    const waMsg = t('yoga_wa_msg');
+    document.getElementById('wa-btn').href = 'https://wa.me/359893679292?text=' + encodeURIComponent(waMsg);
+}
+loadSvcSchedule();
+initLang();
+</script>
+</body>
+</html>

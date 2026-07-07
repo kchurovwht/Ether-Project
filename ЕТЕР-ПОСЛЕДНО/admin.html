@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Програма – Stillnes Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af88; --deep: #2a2a3a; --soft: #f8f1e9; --red: #e05555; --green: #4caf7d; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--soft); color: var(--deep); min-height: 100vh; }
+
+        header {
+            background: var(--deep);
+            padding: 1.1rem 5%;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        header .logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.5rem; }
+        header span { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+
+        .container { max-width: 700px; margin: 0 auto; padding: 2rem 5% 6rem; }
+
+        /* Week label */
+        .week-block {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .week-block label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 6px; }
+        .week-block input {
+            width: 100%; border: 1.5px solid #e0d8ce; border-radius: 10px;
+            padding: 10px 14px; font-size: 1rem; font-family: 'Inter', sans-serif;
+            color: var(--deep); background: var(--soft);
+        }
+        .week-block input:focus { outline: none; border-color: var(--gold); }
+
+        /* Section title */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin: 2rem 0 1rem;
+            color: var(--deep);
+        }
+
+        /* Class card */
+        .class-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            position: relative;
+            border-left: 4px solid var(--gold);
+            transition: box-shadow 0.2s;
+        }
+        .class-card.dragging { opacity: 0.5; }
+        .class-card:active { box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+        .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .card-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+        .field-group label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #999; display: block; margin-bottom: 4px; }
+        .field-group input, .field-group select {
+            width: 100%; border: 1.5px solid #e0d8ce; border-radius: 10px;
+            padding: 9px 12px; font-size: 0.95rem; font-family: 'Inter', sans-serif;
+            color: var(--deep); background: var(--soft); appearance: none;
+        }
+        .field-group input:focus, .field-group select:focus { outline: none; border-color: var(--gold); }
+
+        .delete-btn {
+            position: absolute; top: 10px; right: 12px;
+            background: none; border: none; cursor: pointer;
+            font-size: 1.3rem; color: #ccc; line-height: 1;
+            transition: color 0.2s;
+            padding: 4px;
+        }
+        .delete-btn:hover { color: var(--red); }
+
+        .drag-handle {
+            position: absolute; top: 50%; right: 44px;
+            transform: translateY(-50%);
+            color: #ddd; font-size: 1.2rem; cursor: grab; user-select: none;
+        }
+
+        /* Add button */
+        .add-btn {
+            width: 100%; padding: 14px; margin-top: 4px;
+            background: transparent; border: 2px dashed #d4c4b0;
+            border-radius: 16px; color: #b8a898; font-size: 1rem;
+            font-family: 'Inter', sans-serif; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .add-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(212,175,136,0.05); }
+
+        /* Save bar */
+        .save-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; padding: 1rem 5%;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            display: flex; gap: 12px; align-items: center;
+            z-index: 100;
+        }
+        .save-btn {
+            flex: 1; padding: 15px; background: var(--deep); color: white;
+            border: none; border-radius: 50px; font-size: 1rem; font-weight: 600;
+            font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s;
+        }
+        .save-btn:hover { background: #3d3d52; }
+        .save-btn:active { transform: scale(0.98); }
+
+        .copy-btn {
+            padding: 15px 20px; background: var(--soft); color: var(--deep);
+            border: 1.5px solid #ddd; border-radius: 50px; font-size: 0.9rem;
+            font-family: 'Inter', sans-serif; cursor: pointer; white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { border-color: var(--gold); }
+
+        /* Toast */
+        .toast {
+            position: fixed; top: 1.2rem; left: 50%; transform: translateX(-50%) translateY(-80px);
+            background: var(--deep); color: white; padding: 12px 24px;
+            border-radius: 50px; font-size: 0.9rem; font-weight: 500;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            z-index: 200; white-space: nowrap; pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--red); }
+
+        /* JSON area */
+        .json-section { margin-top: 2.5rem; }
+        .json-toggle { background: none; border: none; color: #aaa; font-size: 0.85rem; cursor: pointer; text-decoration: underline; font-family: 'Inter', sans-serif; }
+        textarea.json-out {
+            width: 100%; margin-top: 1rem; padding: 14px; border-radius: 12px;
+            border: 1.5px solid #e0d8ce; font-family: monospace; font-size: 0.78rem;
+            background: #f0ebe3; color: #555; resize: vertical; min-height: 200px;
+            display: none;
+        }
+
+        /* VID colors */
+        .class-card[data-vid="yoga"]  { border-left-color: #7bb88c; }
+        .class-card[data-vid="akro"]  { border-left-color: #7b9fd4; }
+        .class-card[data-vid="gong"]  { border-left-color: #c4956a; }
+        .class-card[data-vid="sound"] { border-left-color: #a07bb8; }
+        .class-card[data-vid="other"] { border-left-color: #b8b8b8; }
+
+        @media (max-width: 480px) {
+            .card-row { grid-template-columns: 1fr 1fr; }
+            .card-row-3 { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Stillnes</div>
+    <span>Редактор на програма</span>
+</header>
+
+<div class="container">
+    <div class="week-block">
+        <label>Седмица</label>
+        <input type="text" id="sedmitza" placeholder="напр. 23 – 29 юни 2026">
+    </div>
+
+    <h2 class="section-title">Часове тази седмица</h2>
+    <div id="classes-list"></div>
+
+    <button class="add-btn" onclick="addClass()">
+        <span style="font-size:1.4rem; line-height:1;">+</span> Добави час
+    </button>
+
+    <div class="json-section">
+        <button class="json-toggle" onclick="toggleJson()">Покажи JSON за ръчно копиране</button>
+        <textarea class="json-out" id="json-out" readonly></textarea>
+    </div>
+</div>
+
+<div class="save-bar">
+    <button class="save-btn" onclick="savePrograma()">💾 &nbsp;Запази програмата</button>
+    <button class="copy-btn" onclick="copyJson()">Копирай JSON</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DAYS = ['Понеделник','Вторник','Сряда','Четвъртък','Петък','Събота','Неделя'];
+const VIDS = [
+    { val:'yoga',  label:'Йога за теб' },
+    { val:'akro',  label:'Акро Йога' },
+    { val:'gong',  label:'Гонг сесия' },
+    { val:'sound', label:'Звуков масаж' },
+    { val:'other', label:'Друго / Събитие' },
+];
+
+let data = { sedmitza: '', zabelejka: 'Програмата може да се променя. Следете Instagram за актуална информация.', chasyove: [] };
+
+// ── Load ──
+async function load() {
+    try {
+        const r = await fetch('programa.json?t=' + Date.now());
+        if (r.ok) data = await r.json();
+    } catch(e) { /* first time — empty */ }
+    document.getElementById('sedmitza').value = data.sedmitza || '';
+    renderList();
+}
+
+// ── Render ──
+function renderList() {
+    const list = document.getElementById('classes-list');
+    list.innerHTML = '';
+    (data.chasyove || []).forEach((c, i) => {
+        list.innerHTML += cardHTML(c, i);
+    });
+    updateJsonOut();
+}
+
+function cardHTML(c, i) {
+    const dayOpts = DAYS.map(d => `<option ${d===c.den?'selected':''}>${d}</option>`).join('');
+    const vidOpts = VIDS.map(v => `<option value="${v.val}" ${v.val===c.vid?'selected':''}>${v.label}</option>`).join('');
+    return `
+    <div class="class-card" data-vid="${c.vid||'other'}" data-index="${i}">
+        <button class="delete-btn" onclick="deleteClass(${i})" title="Изтрий">×</button>
+        <span class="drag-handle" title="Премести">⠿</span>
+        <div class="card-row">
+            <div class="field-group">
+                <label>Ден</label>
+                <select onchange="update(${i},'den',this.value)">${dayOpts}</select>
+            </div>
+            <div class="field-group">
+                <label>Час</label>
+                <input type="time" value="${c.chas||''}" onchange="update(${i},'chas',this.value)">
+            </div>
+        </div>
+        <div class="card-row">
+            <div class="field-group">
+                <label>Практика / Събитие</label>
+                <input type="text" value="${c.praktika||''}" placeholder="Йога за теб" oninput="update(${i},'praktika',this.value)">
+            </div>
+            <div class="field-group">
+                <label>Водещ</label>
+                <input type="text" value="${c.vodesh||''}" placeholder="Катя" oninput="update(${i},'vodesh',this.value)">
+            </div>
+        </div>
+        <div class="field-group">
+            <label>Вид (за оцветяване)</label>
+            <select onchange="update(${i},'vid',this.value); document.querySelector('[data-index=\\'${i}\\']').dataset.vid=this.value">${vidOpts}</select>
+        </div>
+    </div>`;
+}
+
+function update(i, key, val) {
+    data.chasyove[i][key] = val;
+    updateJsonOut();
+}
+
+function addClass() {
+    data.chasyove.push({ den: 'Понеделник', chas: '18:00', praktika: '', vodesh: '', vid: 'other' });
+    renderList();
+    // Scroll to new card
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.class-card');
+        cards[cards.length-1].scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 80);
+}
+
+function deleteClass(i) {
+    if (!confirm('Изтриваш този час?')) return;
+    data.chasyove.splice(i, 1);
+    renderList();
+}
+
+// ── Save ──
+async function savePrograma() {
+    data.sedmitza = document.getElementById('sedmitza').value;
+    const json = buildJson();
+
+    // Try fetch PUT/POST to same-origin server
+    try {
+        const r = await fetch('save_programa.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: json
+        });
+        if (r.ok) {
+            showToast('✓  Програмата е запазена!', 'success');
+            return;
+        }
+    } catch(e) {}
+
+    // Fallback: download the file
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'programa.json';
+    a.click();
+    showToast('📥  Изтегли файла и го качи на сайта', '');
+}
+
+function buildJson() {
+    data.sedmitza = document.getElementById('sedmitza').value;
+    // Sort by day order then time
+    const order = { 'Понеделник':0,'Вторник':1,'Сряда':2,'Четвъртък':3,'Петък':4,'Събота':5,'Неделя':6 };
+    data.chasyove.sort((a,b) => {
+        const dd = (order[a.den]||0) - (order[b.den]||0);
+        return dd !== 0 ? dd : (a.chas||'').localeCompare(b.chas||'');
+    });
+    return JSON.stringify(data, null, 2);
+}
+
+function updateJsonOut() {
+    document.getElementById('json-out').value = buildJson();
+}
+
+function copyJson() {
+    const txt = buildJson();
+    navigator.clipboard.writeText(txt).then(() => showToast('✓  Копирано!', 'success'));
+}
+
+function toggleJson() {
+    const el = document.getElementById('json-out');
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    if (el.style.display === 'block') updateJsonOut();
+}
+
+// ── Toast ──
+function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+load();
+</script>
+</body>
+</html>
