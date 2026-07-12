@@ -237,7 +237,7 @@
         </p>
         <div class="services-grid">
             <a href="uslugi/gong.html" class="service-card">
-                <img src="Images/ГОНГ.jpg" alt="Звук">
+                <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800" alt="Звук">
                 <div class="content">
                     <h3 data-t-bg="Звук" data-t-en="Sound">Звук</h3>
                     <p data-t-bg="Звукът е път към фините нива на възприятие. Чрез вибрация, музика и звукови практики създаваме пространство за отпускане и дълбоко преживяване."
@@ -460,9 +460,10 @@ const DAYS_EN = { "Понеделник":"Monday","Вторник":"Tuesday","С
 
 async function loadSchedule() {
     try {
-        const r = await fetch('programa.json?t=' + Date.now());
+        const r = await fetch('/.netlify/functions/get-programa?t=' + Date.now());
         if (!r.ok) throw new Error();
-        const data = await r.json();
+        const meta = await r.json();
+        const data = meta.data;
         window._schedData = data;
         if (data.sedmitza) document.getElementById('week-label').textContent = data.sedmitza;
         if (data.zabelejka) document.getElementById('schedule-note').textContent = '* ' + data.zabelejka;
